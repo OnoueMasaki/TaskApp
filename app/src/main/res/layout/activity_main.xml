@@ -8,10 +8,12 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
+
+
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -21,5 +23,13 @@
         android:layout_margin="16dp"
         android:src="@drawable/plus"
         app:backgroundTint="@color/colorPrimary"/>
+
+    <SearchView
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="true"
+        android:queryHint="カテゴリーの検索"
+        android:layout_gravity="bottom|start"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

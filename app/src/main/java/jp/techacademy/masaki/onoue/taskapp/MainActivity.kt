@@ -10,6 +10,8 @@ import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.widget.SearchView
+import android.util.Log
 
 const val EXTRA_TASK = "jp.techacademy.masaki.onoue.taskapp.TASK"
 
@@ -36,8 +38,35 @@ class MainActivity : AppCompatActivity() {
         mRealm = Realm.getDefaultInstance()
         mRealm.addChangeListener(mRealmListener)
 
+
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                // テキストが変更されたときの処理
+                Log.d("cahngetext", "テキストが変わりました")
+                return false
+            }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // テキストが送信されたときの処理
+                var search = mRealm.where(Task::class.java).equalTo("category", query).findAll()
+                    .sort("date", Sort.DESCENDING)
+
+
+
+                    mTaskAdapter.mTaskList = mRealm.copyFromRealm(search)
+                    listView1.adapter = mTaskAdapter
+                    mTaskAdapter.notifyDataSetChanged()
+                    Log.d("submittext", "テキストが送信されました")
+
+
+                return false
+            }
+        })
+
         // ListViewの設定
         mTaskAdapter = TaskAdapter(this)
+
+        // ListViewのカテゴリを検索したときの処理
+
 
         // ListViewをタップしたときの処理
         listView1.setOnItemClickListener { parent, _, position, _ ->
@@ -94,6 +123,7 @@ class MainActivity : AppCompatActivity() {
     private fun reloadListView() {
         // Realmデータベースから、「すべてのデータを取得して新しい日時順に並べた結果」を取得
         val taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
+
 
         // 上記の結果を、TaskListとしてセットする
         mTaskAdapter.mTaskList = mRealm.copyFromRealm(taskRealmResults)
